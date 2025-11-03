@@ -4,7 +4,7 @@ import { loginValidator, registerValidator } from '#validators/auth'
 
 export default class AuthController {
   //POST /auth/register
-  public async register({ request, response, auth }): HttpContext {
+  async register({ request, response, auth }: HttpContext) {
     //data fetch
     const payload = await request.validateUsing(registerValidator)
 
@@ -18,7 +18,7 @@ export default class AuthController {
   }
 
   //POST /auth/login
-  public async login({ request, response, auth }): HttpContext {
+  async login({ request, response }: HttpContext) {
     //validation of email and password
     const { email, password } = await request.validateUsing(loginValidator)
 
