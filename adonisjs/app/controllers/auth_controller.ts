@@ -4,45 +4,44 @@ import { loginValidator, registerValidator } from '#validators/auth'
 
 export default class AuthController {
   //POST /auth/register
-  async register({ request, response, auth }: HttpContext) {
-    //data fetch
-    const payload = await request.validateUsing(registerValidator)
+  // async register({ request, response, auth }: HttpContext) {
+  //   //data fetch
+  //   const payload = await request.validateUsing(registerValidator)
 
-    //account creation
-    const user = await User.create(payload)
+  //   //account creation
+  //   const user = await User.create(payload)
 
-    //access token for direct login
-    const token = await auth.use('api').createToken(user)
+  //   //access token for direct login
+  //   // const token = await auth.use('web').createToken(user)
 
-    return response.created({ message: ` Merci pour votre incription ${user.username}`, token })
-  }
+  //   return response.created({ message: ` Merci pour votre incription ${user.username}` })
+  // }
 
   //POST /auth/login
-  async login({ request, response, auth }: HttpContext) {
+  async login({ request, response, auth, session }: HttpContext) {
     //validation of email and password
     const { email, password } = await request.validateUsing(loginValidator)
 
     //verification with db
     const user = await User.verifyCredentials(email, password)
-    //token
-    const token = await auth.use('api').createToken(user)
+    await auth.use('web').login(user)
 
-    return response.ok({ token })
+    return response.redirect().toRoute('home')
   }
 
-  async logout({ auth, response }: HttpContext) {
-    // Retrieves the logged-in/authenticated user and their token
-    const user = auth.getUserOrFail()
-    const token = auth.user?.currentAccessToken.identifier
+  // async logout({ auth, response }: HttpContext) {
+  //   // Retrieves the logged-in/authenticated user and their token
+  //   const user = auth.getUserOrFail()
+  //   const token = auth.user?.currentAccessToken.identifier
 
-    // If the token does not exist, return HTTP 400 error
-    if (!token) {
-      return response.badRequest({ message: 'Token not found' })
-    }
-    // Delete the token
-    await User.accessTokens.delete(user, token)
+  //   // If the token does not exist, return HTTP 400 error
+  //   if (!token) {
+  //     return response.badRequest({ message: 'Token not found' })
+  //   }
+  //   // Delete the token
+  //   await User.accessTokens.delete(user, token)
 
-    // Confirm to the user that the logout was successful
-    return response.ok({ message: 'Logged out' })
-  }
+  //   // Confirm to the user that the logout was successful
+  //   return response.ok({ message: 'Logged out' })
+  // }
 }
