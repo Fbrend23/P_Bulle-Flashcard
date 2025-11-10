@@ -17,9 +17,9 @@ router.get('/', async ({ view }) => {
 
 router
   .group(() => {
-    router.post('/register', [AuthController, 'register'])
-    router.post('/login', [AuthController, 'register'])
-    router.post('/logout', [AuthController, 'logout'])
+    // router.post('/register', [AuthController, 'register'])
+    router.post('/login', [AuthController, 'login']).as('auth.login')
+    // router.post('/logout', [AuthController, 'logout'])
   })
   .prefix('/auth')
   .use(middleware.auth())
