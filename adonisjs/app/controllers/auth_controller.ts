@@ -12,13 +12,13 @@ export default class AuthController {
     const user = await User.create(payload)
 
     //access token for direct login
-    const token = await auth.user('api').createToken(user)
+    const token = await auth.use('api').createToken(user)
 
     return response.created({ message: ` Merci pour votre incription ${user.username}`, token })
   }
 
   //POST /auth/login
-  async login({ request, response }: HttpContext) {
+  async login({ request, response, auth }: HttpContext) {
     //validation of email and password
     const { email, password } = await request.validateUsing(loginValidator)
 
