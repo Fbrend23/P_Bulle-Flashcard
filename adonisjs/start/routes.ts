@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+import DecksController from '#controllers/decks_controller'
 const AuthController = () => import('#controllers/auth_controller')
 
 router.get('/', async ({ view }) => {
@@ -23,3 +24,5 @@ router
   })
   .prefix('/auth')
   .use(middleware.auth())
+
+router.get('/mydecks', [DecksController, 'index']).as('mydecks')
