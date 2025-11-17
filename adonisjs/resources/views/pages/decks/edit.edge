@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+        FlashCards
+    </title>
+    <link rel="preconnect" href="https://fonts.bunny.net" />
+    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('dumper')
+</head>
+
+<body class="min-h-screen w-screen font-sans">
+    @component('components/layout', { title: 'Accueil' })
+    <div>
+        <form action="{{route('deck.update', {id: deck.id})}}" method="post">
+            {{csrfField()}}
+            <div class="mb-3">
+                @!component('components/input', { name: 'title', label: 'Titre', value:
+                old('title') || (deck ? deck.title : '') })
+            </div>
+            <div class="mb-3">
+                @!component('components/input', { name: 'description', label: 'Description', value:
+                old('description') || (deck ? deck.description : '') })
+            </div>
+            <div class="mb-3 form-check">
+                @!component('components/select', { name: 'publish', label: 'Publier', value:
+                old('isPublished') || (deck ? deck.isPublished : '') })
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </form>
+    </div>
+
+
+    @endcomponent
+</body>
+
+</html>
