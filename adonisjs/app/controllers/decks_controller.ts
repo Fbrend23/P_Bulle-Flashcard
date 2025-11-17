@@ -1,23 +1,22 @@
+import Deck from '#models/deck'
 import User from '#models/user'
 import { deckValidator } from '#validators/deck'
 import type { HttpContext } from '@adonisjs/core/http'
+import { dd } from '@adonisjs/core/services/dumper'
 
 export default class DecksController {
   /**
-   * Display a list of resource
+   * Show every decks published
    */
-  async index({ params, auth, response }: HttpContext) {
-    const user = await User.findOrFail(params.userId)
+  async index({ view }: HttpContext) {
+    //TODO AUTH
+    // const user = await User.findOrFail(params.userId)
+    // const currentUser = auth.user!
+    // const userId = currentUser.id
 
-    const currentUser = auth.user!
-    const userId = currentUser.id
+    const decks = await Deck.query().orderBy('title')
 
-    if (userId !== user.id) {
-      return response.unauthorized('Accès non autorisé')
-    }
-    await user.load('deck')
-
-    return view.render('pages/mydecks', { deck })
+    return view.render('pages/decks', { decks })
   }
 
   /**
@@ -25,9 +24,7 @@ export default class DecksController {
    */
   async store({ request, response, auth }: HttpContext) {
     const { title, description, isPublished } = await request.validateUsing(deckValidator)
-    const currentUser = auth.user!
-    const userId = currentUser.id
-
+    //TODO AUTH
     const deck = await Deck.create({
       title,
       description,
@@ -38,20 +35,24 @@ export default class DecksController {
   /**
    * Show individual record
    */
-  async show({ params }: HttpContext) {}
+  async show({ params, view }: HttpContext) {
+    const deck = await Deck.query().where('id', params.id).firstOrFail()
+
+    return view.render('pages/decks/show', { title: 'Détail du deck ', deck })
+  }
 
   /**
    * Edit individual record
    */
-  async edit({ params }: HttpContext) {}
+  // async edit({ params }: HttpContext) {}
 
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request }: HttpContext) {}
+  // async update({ params, request }: HttpContext) {}
 
   /**
    * Delete record
    */
-  async destroy({ params }: HttpContext) {}
+  // async destroy({ params }: HttpContext) {}
 }
