@@ -49,15 +49,15 @@
                         {{deck.description}}
                     </td>
                     <td class="containerOptions">
-                        <a href="#">
+                        <a href="{{ route('deck.show', {id: deck.id})}}">
                             <img height="20em" src="/adonisjs/resources/img/edit.png" alt="edit" />
                         </a>
                         <a href="javascript:confirmDelete()">
                             <img height="20em" src="/adonisjs/resources/img/delete.png" alt="delete" />
                         </a>
-                        <a href="detailTeacher.html">
+                        {{-- <a href="detailTeacher.html">
                             <img height="20em" src="../../img/detail.png" alt="detail" />
-                        </a>
+                        </a> --}}
                     </td>
                 </tr>
                 @end
