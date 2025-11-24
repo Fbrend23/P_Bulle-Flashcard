@@ -1,0 +1,14 @@
+{{ csrfField() }}
+<div class="field">
+    @!component('components/input', { name: 'title', label: 'Titre', value:
+    old('title') })
+</div>
+<div class="field">
+    @!component('components/textarea', { name: 'description', label: 'Description',
+    value: old('description') })
+</div>
+<div class="field">
+    @!component('components/checkbox', { name: 'isPublished', label: 'Publier', type: 'checkbox'
+    })
+</div>
+<button type="submit">Enregistrer</button>
