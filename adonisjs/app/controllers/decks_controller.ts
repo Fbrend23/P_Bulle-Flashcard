@@ -69,5 +69,19 @@ export default class DecksController {
   /**
    * Delete record
    */
-  // async destroy({ params }: HttpContext) {}
+  async destroy({ params, response }: HttpContext) {
+    //todo auth
+    const deck = await Deck.findOrFail(params.id)
+    if (deck) {
+      await deck.delete()
+    }
+    response.redirect().toRoute('mydecks.index')
+  }
+
+  /**
+   * add record
+   */
+  async create({ view }: HttpContext) {
+    return view.render('pages/decks/create', { title: 'Créer un deck' })
+  }
 }
