@@ -30,6 +30,7 @@ export default class DecksController {
       description,
       isPublished,
     })
+    return response.redirect().toRoute('deck.show', { id: deck.id })
   }
 
   /**
@@ -62,7 +63,7 @@ export default class DecksController {
     if (deck) {
       await deck.merge({ title, description, isPublished }).save()
     }
-    console.log('Deck modifié')
+    response.redirect().toRoute('deck.show', { id: deck.id })
   }
 
   /**
