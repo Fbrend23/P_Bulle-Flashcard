@@ -1,6 +1,6 @@
 <label for="{{ name }}">{{ label }}</label>
-<input type="{{ type || text }}" name="{{ name }}" id="{{ name }}" value="{{ value || '' }}"
-    placeholder="{{ label }}" />
+<input type="{{ type || text }}" name="{{ name }}" id="{{ name }}" value="{{ value || '' }}" placeholder="{{ label }}"
+    checked="{{value || false}}" />
 @inputError(name)
 @each(message in $messages)
 <p class="text-danger">
