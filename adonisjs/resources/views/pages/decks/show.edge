@@ -4,7 +4,7 @@
         <h2 class=" text-center"> {{deck.title}} </h2>
         <p class="text-center"> {{deck.description}} </p>
         <a class="btn btn-primary" href="{{ route('deck.edit', {id: deck.id})}}">Editer</a>
-        <a class="btn btn-secondary">Supprimer</a>
+        <a class="btn btn-secondary" href="{{ route('deck.destroy', {id: deck.id})}}">Supprimer</a>
     </div>
 </div>
 @endcomponent

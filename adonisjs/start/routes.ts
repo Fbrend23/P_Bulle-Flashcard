@@ -14,8 +14,15 @@ const DecksController = () => import('#controllers/decks_controller')
 const AuthController = () => import('#controllers/auth_controller')
 
 router.get('/', [HomepagesController, 'index'])
-router.get('/mydecks', [DecksController, 'index'])
+router.get('/mydecks', [DecksController, 'index']).as('mydecks.index')
 router.get('/decks/:id/show', [DecksController, 'show']).as('deck.show')
-//Deck Edit
+
+//Deck controller
+//add
+router.get('/decks/create', [DecksController, 'create']).as('deck.create')
+router.post('/decks/add', [DecksController, 'store']).as('deck.store')
+//edit
 router.get('/decks/:id/edit', [DecksController, 'edit']).as('deck.edit')
 router.post('/decks/:id/update', [DecksController, 'update']).as('deck.update')
+//destroy
+router.get('/decks/:id/destroy', [DecksController, 'destroy']).as('deck.destroy')
