@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('title').notNullable
       table.string('description').notNullable
-      table.boolean('isPublished').notNullable
+      table.boolean('is_published').notNullable
 
       //FK
       table.integer('userId').unsigned().references('id').notNullable

@@ -1,0 +1,5 @@
+@component('components/layout', { title: title })
+<form action="{{ route('deck.update', {deckId: deck.id}) }}" method="post">
+    @include('partials/createOrUpdateForm')
+</form>
+@endcomponent

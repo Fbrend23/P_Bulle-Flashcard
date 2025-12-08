@@ -1,0 +1,47 @@
+@component('components/layout', { title: 'Voir les cartes'})
+<h3>
+    Cartes du deck
+</h3>
+<a href="{{ route('card.create', {deckId: deck.id})}}">
+    <button class="button">Ajouter un carte</button>
+</a>
+<form action="#" method="post">
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    Question
+                </th>
+                <th>
+                    Réponses
+                </th>
+                <th>
+                    Options
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @each ((card in cards))
+            <tr>
+                <td>
+                    {{card.question}}
+                </td>
+                <td>
+                    {{card.anwser}}
+                </td>
+                <td class="containerOptions">
+                    <a href="{{ route('card.index', {deckId: deck.id})}}">
+                        <img height="20em" src="/adonisjs/resources/img/edit.png" alt="edit" />
+                    </a>
+                    <a href="javascript:confirmDelete()">
+                        <img height="20em" src="/adonisjs/resources/img/delete.png" alt="delete" />
+                    </a>
+                    {{-- <a href="detailTeacher.html">
+                        <img height="20em" src="../../img/detail.png" alt="detail" />
+                    </a> --}}
+                </td>
+            </tr>
+            @end
+        </tbody>
+    </table>
+    @endcomponent
