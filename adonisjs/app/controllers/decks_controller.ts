@@ -1,6 +1,4 @@
 import Deck from '#models/deck'
-import Flashcard from '#models/flashcard'
-import User from '#models/user'
 import { deckValidator } from '#validators/deck'
 import type { HttpContext } from '@adonisjs/core/http'
 
@@ -8,82 +6,66 @@ export default class DecksController {
   /**
    * Show every decks published
    */
-  async index({ view }: HttpContext) {
-    //TODO AUTH
-    // const user = await User.findOrFail(params.userId)
-    // const currentUser = auth.user!
-    // const userId = currentUser.id
+  async index({ view, auth }: HttpContext) {
+    const user = auth.getUserOrFail()
 
-    const decks = await Deck.query().orderBy('title')
-
-    return view.render('pages/decks', { decks })
+    const decks = await user.related('deck').query().orderBy('updated_at', 'desc')
+    return view.render('pages/myDecks', { decks })
   }
-
   /**
    * Handle form submission for the create action
    */
-  async store({ request, response, auth }: HttpContext) {
-    const { title, description, isPublished } = await request.validateUsing(deckValidator)
-    //TODO AUTH
-    const deck = await Deck.create({
-      title,
-      description,
-      isPublished,
-    })
-    return response.redirect().toRoute('deck.show', { deckId: deck.id })
+  async create({ view }: HttpContext) {
+    return view.render('pages/decks/create', { title: 'Créer un deck' })
   }
 
+  async store({ request, response, auth }: HttpContext) {
+    const data = await request.validateUsing(deckValidator)
+    const user = auth.getUserOrFail()
+
+    const deck = await user.related('deck').create(data)
+
+    return response.redirect().toRoute('deck.show', { id: deck.id })
+  }
   /**
    * Show individual record
    */
-  async show({ params, view }: HttpContext) {
-    const deck = await Deck.query().where('id', params.deckId).firstOrFail()
-    return view.render('pages/decks/show', {
-      title: 'Détail du deck ',
-      deck,
-    })
-  }
+  async show({ params, view, auth }: HttpContext) {
+    const deck = await Deck.findOrFail(params.id)
 
+    if (deck.userId === auth.user?.id || deck.isPublished) {
+      return view.render('pages/decks/show', { deck, title: deck.title })
+    }
+    return view.render('pages/errors/not_found')
+  }
   /**
    * Edit individual record
    */
-  async edit({ params, view }: HttpContext) {
-    const deck = await Deck.findOrFail(params.deckId)
-    return view.render('pages/decks/edit', {
-      title: 'Modifier le deck',
-      deck,
-    })
+  async edit({ params, view, auth }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const deck = await user.related('deck').query().where('id', params.id).firstOrFail()
+    return view.render('pages/decks/edit', { title: 'Modifier le deck', deck })
   }
 
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request, response }: HttpContext) {
-    const { title, description, isPublished } = await request.validateUsing(deckValidator)
-    const deck = await Deck.findOrFail(params.deckId)
+  async update({ params, request, response, auth }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const deck = await user.related('deck').query().where('id', params.id).firstOrFail()
+    const data = await request.validateUsing(deckValidator)
 
-    if (deck) {
-      await deck.merge({ title, description, isPublished }).save()
-    }
-    response.redirect().toRoute('deck.show', { deckId: deck.id })
+    await deck.merge(data).save()
+    return response.redirect().toRoute('deck.show', { id: deck.id })
   }
 
   /**
    * Delete record
    */
-  async destroy({ params, response }: HttpContext) {
-    //todo auth
-    const deck = await Deck.findOrFail(params.deckId)
-    if (deck) {
-      await deck.delete()
-    }
-    response.redirect().toRoute('mydecks.index')
-  }
-
-  /**
-   * add record
-   */
-  async create({ view }: HttpContext) {
-    return view.render('pages/decks/create', { title: 'Créer un deck' })
+  async destroy({ params, response, auth }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const deck = await user.related('deck').query().where('id', params.id).firstOrFail()
+    await deck.delete()
+    return response.redirect().toRoute('mydecks.index')
   }
 }

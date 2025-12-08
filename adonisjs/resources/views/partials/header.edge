@@ -1,20 +1,33 @@
+@eval(await auth.check())
 <header>
-    <div class="container-header">
-        <div class="titre-header">
-            <h1>FlashCards</h1>
-        </div>
-        <nav>
-            <div class="login-container">
-                <form action="#" method="post">
-                    <label for="user"></label>
-                    <input type="text" name="user" id="user" placeholder="Login" />
-                    <label for="password"></label>
-                    <input type="password" name="password" id="password" placeholder="Mot de passe" />
-                    <button type="submit" class="btn btn-login">
-                        Se connecter
-                    </button>
-                </form>
+    <div>
+        <div>
+            <a href="/" >
+                <span class="fs-4">FlashCards</span>
+            </a>
+            <ul >
+                @if(auth.isAuthenticated)
+                    <li><a href="{{ route('mydecks.index') }}">Mes Decks</a></li>
+                    <li><a href="{{ route('deck.create') }}" >Créer un deck</a></li>
+                @endif
+            </ul>
+
+            <div class="text-end">
+                @if(auth.isAuthenticated)
+                    <span class="me-3">Bonjour, {{ auth.user.username }}</span>
+                    <a href="{{ route('logout') }}">Déconnexion</a>
+                @else
+                    <div class="d-flex gap-2 align-items-center">
+                        <form action="{{ route('login') }}" method="post" >
+                            {{ csrfField() }}
+                            <input type="email" name="email" placeholder="Email" required>
+                            <input type="password" name="password"  placeholder="Mot de passe" required>
+                            <button type="submit">Se connecter</button>
+                        </form>
+                        <a href="{{ route('register.show') }}">Inscription</a>
+                    </div>
+                @endif
             </div>
-        </nav>
+        </div>
     </div>
 </header>

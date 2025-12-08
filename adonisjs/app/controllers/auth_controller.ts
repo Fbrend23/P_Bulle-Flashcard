@@ -1,48 +1,31 @@
-// import type { HttpContext } from '@adonisjs/core/http'
-// import User from '#models/user'
-// import { loginValidator, registerValidator } from '#validators/auth'
+import User from '#models/user'
+import { loginValidator, registerValidator } from '#validators/auth'
+import type { HttpContext } from '@adonisjs/core/http'
 
-// export default class AuthController {
-//   //POST /auth/register
-//   async register({ request, response, auth }: HttpContext) {
-//     //data fetch
-//     const payload = await request.validateUsing(registerValidator)
+export default class AuthController {
+  async registerForm({ view }: HttpContext) {
+    return view.render('pages/auth/register')
+  }
 
-//     //account creation
-//     const user = await User.create(payload)
+  async register({ request, response, auth }: HttpContext) {
+    const payload = await request.validateUsing(registerValidator)
+    const user = await User.create(payload)
 
-//     //access token for direct login
-//     const token = await auth.use('api').createToken(user)
+    await auth.use('web').login(user)
+    return response.redirect().toRoute('home')
+  }
 
-//     return response.created({ message: ` Merci pour votre incription ${user.username}`, token })
-//   }
+  async login({ request, response, auth, session }: HttpContext) {
+    const { email, password } = await request.validateUsing(loginValidator)
+    const user = await User.verifyCredentials(email, password)
 
-//   //POST /auth/login
-//   async login({ request, response, auth }: HttpContext) {
-//     //validation of email and password
-//     const { email, password } = await request.validateUsing(loginValidator)
+    await auth.use('web').login(user)
+    session.flash('success', 'Connexion réussie')
+    return response.redirect().toRoute('mydecks.index')
+  }
 
-//     //verification with db
-//     const user = await User.verifyCredentials(email, password)
-//     //token
-//     const token = await auth.use('api').createToken(user)
-
-//     return response.ok({ token })
-//   }
-
-//   async logout({ auth, response }: HttpContext) {
-//     // Retrieves the logged-in/authenticated user and their token
-//     const user = auth.getUserOrFail()
-//     const token = auth.user?.currentAccessToken.identifier
-
-//     // If the token does not exist, return HTTP 400 error
-//     if (!token) {
-//       return response.badRequest({ message: 'Token not found' })
-//     }
-//     // Delete the token
-//     await User.accessTokens.delete(user, token)
-
-//     // Confirm to the user that the logout was successful
-//     return response.ok({ message: 'Logged out' })
-//   }
-// }
+  async logout({ auth, response }: HttpContext) {
+    await auth.use('web').logout()
+    return response.redirect().toRoute('/')
+  }
+}

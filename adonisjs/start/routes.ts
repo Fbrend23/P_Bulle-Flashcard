@@ -14,20 +14,23 @@ const HomepagesController = () => import('#controllers/homepages_controller')
 const DecksController = () => import('#controllers/decks_controller')
 const AuthController = () => import('#controllers/auth_controller')
 
-router.get('/', [HomepagesController, 'index'])
-router.get('/mydecks', [DecksController, 'index']).as('mydecks.index')
-router.get('/decks/:deckId/show', [DecksController, 'show']).as('deck.show')
+router.get('/', [HomepagesController, 'index']).as('home')
 
 //Deck controller
-//add
-router.get('/decks/create', [DecksController, 'create']).as('deck.create')
-router.post('/decks/add', [DecksController, 'store']).as('deck.store')
-//edit
-router.get('/decks/:deckId/edit', [DecksController, 'edit']).as('deck.edit')
-router.post('/decks/:deckId/update', [DecksController, 'update']).as('deck.update')
-//destroy
-router.get('/decks/:deckId/destroy', [DecksController, 'destroy']).as('deck.destroy')
-
+router
+  .group(() => {
+    router.get('/mydecks', [DecksController, 'index']).as('mydecks.index')
+    router.get('/decks/:deckId/show', [DecksController, 'show']).as('deck.show')
+    //add
+    router.get('/decks/create', [DecksController, 'create']).as('deck.create')
+    router.post('/decks/add', [DecksController, 'store']).as('deck.store')
+    //edit
+    router.get('/decks/:deckId/edit', [DecksController, 'edit']).as('deck.edit')
+    router.post('/decks/:deckId/update', [DecksController, 'update']).as('deck.update')
+    //destroy
+    router.get('/decks/:deckId/destroy', [DecksController, 'destroy']).as('deck.destroy')
+  })
+  .use(middleware.auth())
 //Cards
 router
   .group(() => {
@@ -40,3 +43,10 @@ router
     router.get('/:cardId/destroy', [CardsController, 'destroy']).as('card.destroy')
   })
   .prefix('/decks/:deckId/cards')
+  .use(middleware.auth())
+
+// Authentication
+router.post('/login', [AuthController, 'login']).as('login')
+router.get('/logout', [AuthController, 'logout']).as('logout').use(middleware.auth())
+router.get('/register', [AuthController, 'registerForm']).as('register.show')
+router.post('/register', [AuthController, 'register']).as('register')
