@@ -1,8 +1,8 @@
 import Deck from '#models/deck'
+import Flashcard from '#models/flashcard'
 import User from '#models/user'
 import { deckValidator } from '#validators/deck'
 import type { HttpContext } from '@adonisjs/core/http'
-import { dd } from '@adonisjs/core/services/dumper'
 
 export default class DecksController {
   /**
@@ -30,23 +30,25 @@ export default class DecksController {
       description,
       isPublished,
     })
-    return response.redirect().toRoute('deck.show', { id: deck.id })
+    return response.redirect().toRoute('deck.show', { deckId: deck.id })
   }
 
   /**
    * Show individual record
    */
   async show({ params, view }: HttpContext) {
-    const deck = await Deck.query().where('id', params.id).firstOrFail()
-
-    return view.render('pages/decks/show', { title: 'Détail du deck ', deck })
+    const deck = await Deck.query().where('id', params.deckId).firstOrFail()
+    return view.render('pages/decks/show', {
+      title: 'Détail du deck ',
+      deck,
+    })
   }
 
   /**
    * Edit individual record
    */
   async edit({ params, view }: HttpContext) {
-    const deck = await Deck.findOrFail(params.id)
+    const deck = await Deck.findOrFail(params.deckId)
     return view.render('pages/decks/edit', {
       title: 'Modifier le deck',
       deck,
@@ -58,12 +60,12 @@ export default class DecksController {
    */
   async update({ params, request, response }: HttpContext) {
     const { title, description, isPublished } = await request.validateUsing(deckValidator)
-    const deck = await Deck.findOrFail(params.id)
+    const deck = await Deck.findOrFail(params.deckId)
 
     if (deck) {
       await deck.merge({ title, description, isPublished }).save()
     }
-    response.redirect().toRoute('deck.show', { id: deck.id })
+    response.redirect().toRoute('deck.show', { deckId: deck.id })
   }
 
   /**
@@ -71,7 +73,7 @@ export default class DecksController {
    */
   async destroy({ params, response }: HttpContext) {
     //todo auth
-    const deck = await Deck.findOrFail(params.id)
+    const deck = await Deck.findOrFail(params.deckId)
     if (deck) {
       await deck.delete()
     }

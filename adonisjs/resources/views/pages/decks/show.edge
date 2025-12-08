@@ -1,10 +1,11 @@
-@component('components/layout', { title: 'Accueil' })
+@component('components/layout', { title: deck.title })
 <div class="card">
     <div class="card-body" style="width: 18rem;">
         <h2 class=" text-center"> {{deck.title}} </h2>
         <p class="text-center"> {{deck.description}} </p>
-        <a class="btn btn-primary" href="{{ route('deck.edit', {id: deck.id})}}">Editer</a>
-        <a class="btn btn-secondary" href="{{ route('deck.destroy', {id: deck.id})}}">Supprimer</a>
+        <a class="btn btn-primary" href="{{ route('deck.edit', {deckId: deck.id})}}">Editer</a>
+        <a class="btn btn-primary" href="{{ route('card.index',{deckId: deck.id})}}">Editer les flashcards</a>
+        <a class="btn btn-secondary" href="{{ route('deck.destroy', {deckId: deck.id})}}">Supprimer</a>
     </div>
 </div>
 @endcomponent

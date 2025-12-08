@@ -5,7 +5,7 @@
         <h5 class="card-title">{{deck.title}}</h5>
         <p class="card-text">{{deck.description}}</p>
         <a href="#" class="btn btn-primary">Jouer</a>
-        <a href="{{ route('deck.show', {id: deck.id})}}" class="btn btn-primary">Voir le deck</a>
+        <a href="{{ route('deck.show', {deckId: deck.id})}}" class="btn btn-primary">Voir le deck</a>
     </div>
 </div>
 @end
