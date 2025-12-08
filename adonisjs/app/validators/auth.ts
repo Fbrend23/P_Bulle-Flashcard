@@ -2,11 +2,6 @@ import vine from '@vinejs/vine'
 
 export const loginValidator = vine.compile(
   vine.object({
-    username: vine
-      .string()
-      .minLength(3)
-      .maxLength(32)
-      .regex(/^[a-zA-Z0-9]+$/),
     password: vine.string().minLength(8).maxLength(512),
     email: vine.string().email(),
   })

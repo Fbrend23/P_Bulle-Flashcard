@@ -21,11 +21,11 @@ export default class AuthController {
 
     await auth.use('web').login(user)
     session.flash('success', 'Connexion réussie')
-    return response.redirect().toRoute('mydecks.index')
+    return response.redirect().toRoute('home')
   }
 
   async logout({ auth, response }: HttpContext) {
     await auth.use('web').logout()
-    return response.redirect().toRoute('/')
+    return response.redirect().toRoute('home')
   }
 }
