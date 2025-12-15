@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasOne } from '@adonisjs/lucid/orm'
-import type { HasOne } from '@adonisjs/lucid/types/relations'
+import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import Deck from './deck.js'
 
 export default class Flashcard extends BaseModel {
@@ -13,9 +13,14 @@ export default class Flashcard extends BaseModel {
   @column()
   declare anwser: string
 
+  @column({ columnName: 'deckId' })
+  declare deckId: number
+
   // relations
-  @hasOne(() => Deck)
-  declare deck: HasOne<typeof Deck>
+  @belongsTo(() => Deck, {
+    foreignKey: 'deckId',
+  })
+  declare deck: BelongsTo<typeof Deck>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
