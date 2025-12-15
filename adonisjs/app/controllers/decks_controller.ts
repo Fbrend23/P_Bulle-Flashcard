@@ -25,13 +25,13 @@ export default class DecksController {
 
     const deck = await user.related('deck').create(data)
 
-    return response.redirect().toRoute('deck.show', { id: deck.id })
+    return response.redirect().toRoute('deck.show', { deckId: deck.id })
   }
   /**
    * Show individual record
    */
   async show({ params, view, auth }: HttpContext) {
-    const deck = await Deck.findOrFail(params.id)
+    const deck = await Deck.findOrFail(params.deckId)
 
     if (deck.userId === auth.user?.id || deck.isPublished) {
       return view.render('pages/decks/show', { deck, title: deck.title })
@@ -43,7 +43,7 @@ export default class DecksController {
    */
   async edit({ params, view, auth }: HttpContext) {
     const user = auth.getUserOrFail()
-    const deck = await user.related('deck').query().where('id', params.id).firstOrFail()
+    const deck = await user.related('deck').query().where('id', params.deckId).firstOrFail()
     return view.render('pages/decks/edit', { title: 'Modifier le deck', deck })
   }
 
@@ -52,11 +52,11 @@ export default class DecksController {
    */
   async update({ params, request, response, auth }: HttpContext) {
     const user = auth.getUserOrFail()
-    const deck = await user.related('deck').query().where('id', params.id).firstOrFail()
+    const deck = await user.related('deck').query().where('id', params.deckId).firstOrFail()
     const data = await request.validateUsing(deckValidator)
 
     await deck.merge(data).save()
-    return response.redirect().toRoute('deck.show', { id: deck.id })
+    return response.redirect().toRoute('deck.show', { deckId: deck.id })
   }
 
   /**
@@ -64,7 +64,7 @@ export default class DecksController {
    */
   async destroy({ params, response, auth }: HttpContext) {
     const user = auth.getUserOrFail()
-    const deck = await user.related('deck').query().where('id', params.id).firstOrFail()
+    const deck = await user.related('deck').query().where('id', params.deckId).firstOrFail()
     await deck.delete()
     return response.redirect().toRoute('mydecks.index')
   }
