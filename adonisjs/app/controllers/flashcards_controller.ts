@@ -49,10 +49,9 @@ export default class CardsController {
     // Validation des données
     const { question, answer } = await request.validateUsing(cardValidator)
 
-    // Création de la carte (Note: mappage de 'answer' vers 'anwser' à cause de la typo en BDD)
     await deck.related('flashcard').create({
       question,
-      anwser: answer,
+      answer,
     })
 
     session.flash('success', 'Carte créée avec succès')
@@ -70,7 +69,7 @@ export default class CardsController {
     await card.load('deck')
 
     if (card.deck.userId !== user.id) {
-      return view.render('pages/errors/not_found') // Ou forbidden
+      return view.render('pages/errors/not_found')
     }
 
     return view.render('pages/cards/edit', { card, deck: card.deck, title: 'Modifier la carte' })
@@ -90,10 +89,10 @@ export default class CardsController {
 
     const { question, answer } = await request.validateUsing(cardValidator)
 
-    // Mise à jour (toujours avec la gestion de la typo 'anwser')
+    // Mise à jour
     card.merge({
       question,
-      anwser: answer,
+      answer,
     })
     await card.save()
 

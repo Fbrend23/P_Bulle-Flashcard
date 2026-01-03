@@ -11,7 +11,7 @@ export default class Flashcard extends BaseModel {
   declare question: string
 
   @column()
-  declare anwser: string
+  declare answer: string
 
   @column({ columnName: 'deckId' })
   declare deckId: number
