@@ -31,7 +31,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare email: string
 
-  @hasMany(() => Deck)
+  @column()
+  declare isAdmin: boolean
+
+  @hasMany(() => Deck, {
+    foreignKey: 'userId',
+  })
   declare deck: HasMany<typeof Deck>
 
   @column({ serializeAs: null })

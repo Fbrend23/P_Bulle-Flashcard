@@ -1,33 +1,37 @@
 @eval(await auth.check())
-<header>
-    <div>
-        <div>
-            <a href="/" >
-                <span class="fs-4">FlashCards</span>
-            </a>
-            <ul >
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">FlashCards</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 @if(auth.isAuthenticated)
-                    <li><a href="{{ route('mydecks.index') }}">Mes Decks</a></li>
-                    <li><a href="{{ route('deck.create') }}" >Créer un deck</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('mydecks.index') }}">Mes Decks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('deck.create') }}">Créer un deck</a>
+                    </li>
                 @endif
             </ul>
 
-            <div class="text-end">
+            <div class="d-flex align-items-center">
                 @if(auth.isAuthenticated)
-                    <span class="me-3">Bonjour, {{ auth.user.username }}</span>
-                    <a href="{{ route('logout') }}">Déconnexion</a>
+                    <span class="text-white me-3">Bonjour, <strong>{{ auth.user.username }}</strong></span>
+                    <a href="{{ route('logout') }}" class="btn btn-outline-light btn-sm">Déconnexion</a>
                 @else
-                    <div class="d-flex gap-2 align-items-center">
-                        <form action="{{ route('login') }}" method="post" >
-                            {{ csrfField() }}
-                            <input type="email" name="email" placeholder="Email" required>
-                            <input type="password" name="password"  placeholder="Mot de passe" required>
-                            <button type="submit">Se connecter</button>
-                        </form>
-                        <a href="{{ route('register.show') }}">Inscription</a>
-                    </div>
+                    <form action="{{ route('login') }}" method="post" class="d-flex gap-2">
+                        {{ csrfField() }}
+                        <input class="form-control form-control-sm" type="email" name="email" placeholder="Email" required>
+                        <input class="form-control form-control-sm" type="password" name="password" placeholder="Mot de passe" required>
+                        <button class="btn btn-light btn-sm" type="submit">Connexion</button>
+                    </form>
+                    <a href="{{ route('register.show') }}" class="btn btn-outline-light btn-sm ms-2">Inscription</a>
                 @endif
             </div>
         </div>
     </div>
-</header>
+</nav>

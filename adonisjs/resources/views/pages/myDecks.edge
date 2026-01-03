@@ -1,71 +1,49 @@
-<!DOCTYPE html>
-<html>
+@component('components/layout', { title: 'Mes Decks' })
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Mes Decks</h1>
+        <a href="{{ route('deck.create') }}" class="btn btn-primary">
+            + Nouveau Deck
+        </a>
+    </div>
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>
-        FlashCards
-    </title>
-    <link rel="preconnect" href="https://fonts.bunny.net" />
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,400i,500,500i,600,600i,700,700i"
-        rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @stack('dumper')
-</head>
-
-<body class="min-h-screen w-screen font-sans">
-    @component('components/layout', { title: 'Accueil' })
-    <h3>
-        Mes Decks
-    </h3>
-    <form action="#" method="post">
-        <table>
-            <thead>
-                <tr>
-                    <th>
-                        Nom
-                    </th>
-                    <th>
-                        Description
-                    </th>
-                    <th>
-                        Options
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @each ((deck, index) in decks)
-                <tr>
-                    <td>
-                        {{deck.title}}
-                    </td>
-                    <td>
-                        {{deck.description}}
-                    </td>
-                    <td class="containerOptions">
-                        <a href="{{ route('deck.show', {id: deck.id})}}">
-                            <img height="20em" src="/adonisjs/resources/img/edit.png" alt="edit" />
-                        </a>
-                        <a href="javascript:confirmDelete()">
-                            <img height="20em" src="/adonisjs/resources/img/delete.png" alt="delete" />
-                        </a>
-                        {{-- <a href="detailTeacher.html">
-                            <img height="20em" src="../../img/detail.png" alt="detail" />
-                        </a> --}}
-                    </td>
-                </tr>
-                @end
-            </tbody>
-        </table>
-    </form>
-
-
-    @endcomponent
-
-</html>
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" class="ps-4">Titre</th>
+                            <th scope="col">Description</th>
+                            <th scope="col" class="text-end pe-4">Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @each(deck in decks)
+                        <tr>
+                            <td class="ps-4 fw-medium">{{deck.title}}</td>
+                            <td>{{deck.description}}</td>
+                            <td class="text-end pe-4">
+                                <a href="{{ route('deck.show', {deckId: deck.id})}}" class="btn btn-sm btn-outline-info me-1" title="Voir">
+                                    Voir
+                                </a>
+                                <a href="{{ route('deck.edit', {deckId: deck.id})}}" class="btn btn-sm btn-outline-warning me-1" title="Modifier">
+                                    Modifier
+                                </a>
+                                <a href="{{ route('deck.destroy', {deckId: deck.id})}}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce deck ?')" title="Supprimer">
+                                    Supprimer
+                                </a>
+                            </td>
+                        </tr>
+                        @else
+                        <tr>
+                            <td colspan="3" class="text-center py-4 text-muted">
+                                Vous n'avez aucun deck pour le moment.
+                            </td>
+                        </tr>
+                        @end
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+@endcomponent

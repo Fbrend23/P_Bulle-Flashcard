@@ -7,10 +7,16 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.string('question').notNullable()
-      table.string('anwser').notNullable()
+      table.string('answer').notNullable()
 
       //fk
-      table.integer('deckId').unsigned().references('id').notNullable
+      table
+        .integer('deck_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('decks')
+        .onDelete('CASCADE')
 
       table.timestamp('created_at')
       table.timestamp('updated_at')

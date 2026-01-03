@@ -1,47 +1,46 @@
-@component('components/layout', { title: 'Voir les cartes'})
-<h3>
-    Cartes du deck
-</h3>
-<a href="{{ route('card.create', {deckId: deck.id})}}">
-    <button class="button">Ajouter un carte</button>
-</a>
-<form action="#" method="post">
-    <table>
-        <thead>
-            <tr>
-                <th>
-                    Question
-                </th>
-                <th>
-                    Réponses
-                </th>
-                <th>
-                    Options
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @each ((card in cards))
-            <tr>
-                <td>
-                    {{card.question}}
-                </td>
-                <td>
-                    {{card.anwser}}
-                </td>
-                <td class="containerOptions">
-                    <a href="{{ route('card.index', {deckId: deck.id})}}">
-                        <img height="20em" src="/adonisjs/resources/img/edit.png" alt="edit" />
-                    </a>
-                    <a href="javascript:confirmDelete()">
-                        <img height="20em" src="/adonisjs/resources/img/delete.png" alt="delete" />
-                    </a>
-                    {{-- <a href="detailTeacher.html">
-                        <img height="20em" src="../../img/detail.png" alt="detail" />
-                    </a> --}}
-                </td>
-            </tr>
-            @end
-        </tbody>
-    </table>
-    @endcomponent
+@component('components/layout', { title: 'Voir les cartes' })
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Cartes du deck</h1>
+        <a href="{{ route('card.create', {deckId: deck.id})}}" class="btn btn-primary">
+            + Ajouter une carte
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" class="ps-4">Question</th>
+                            <th scope="col">Réponses</th>
+                            <th scope="col" class="text-end pe-4">Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @each(card in cards)
+                        <tr>
+                            <td class="ps-4 fw-medium">{{card.question}}</td>
+                            <td>{{card.answer}}</td>
+                            <td class="text-end pe-4">
+                                <a href="{{ route('card.edit', {deckId: deck.id, cardId: card.id})}}" class="btn btn-sm btn-outline-warning me-1">
+                                    Modifier
+                                </a>
+                                <a href="{{ route('card.destroy', {deckId: deck.id, cardId: card.id})}}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Supprimer cette carte ?')">
+                                    Supprimer
+                                </a>
+                            </td>
+                        </tr>
+                        @else
+                        <tr>
+                            <td colspan="3" class="text-center py-4 text-muted">
+                                Ce deck ne contient aucune carte.
+                            </td>
+                        </tr>
+                        @end
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+@endcomponent

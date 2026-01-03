@@ -1,9 +1,7 @@
 {{ csrfField() }} <div class="field">
-    @!component('components/input', { name: 'question', label: 'Question', value:
-    old('question' || (question ? card.question : '')) })
+    @!component('components/input', { name: 'question', label: 'Question', value: old('question', card ? card.question : '') })
 </div>
 <div class="field">
-    @!component('components/input', { name: 'answer', label: 'Réponse',
-    value: old('anwser') || (answer ? card.anwser : '') })
+    @!component('components/input', { name: 'answer', label: 'Réponse', value: old('answer') || (card ? card.answer : '') })
 </div>
-<button type="submit">Enregistrer</button>
+<button type="submit" class="btn btn-primary">Enregistrer</button>
