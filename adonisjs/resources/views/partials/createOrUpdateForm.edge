@@ -1,20 +1,19 @@
-{{ csrfField() }} <div class="field">
-    @!component('components/input', { name: 'title', label: 'Titre', value:
-    old('title' || (title ? deck.title : '')) })
+{{ csrfField() }} 
+<div class="field">
+    @!component('components/input', { name: 'title', label: 'Titre', value: old('title') || (deck ? deck.title : '') })
 </div>
 <div class="field">
-    @!component('components/textarea', { name: 'description', label: 'Description',
-    value: old('description') || (description ? deck.description : '') })
+    @!component('components/textarea', { name: 'description', label: 'Description', value: old('description') || (deck ? deck.description : '') })
 </div>
 <div class="radio">
     @!component('components/radio', {
     name: 'isPublished',
     label: 'Publier ?',
-    value: old('isPublished'),
+    value: old('isPublished') || (deck ? (deck.isPublished ? '1' : '0') : '0'),
     options: [
     { value: '1', label: 'Oui' },
     { value: '0', label: 'Non' },
     ]
     })
 </div>
-<button type="submit">Enregistrer</button>
+<button type="submit" class="btn btn-primary">Enregistrer</button>

@@ -1,10 +1,12 @@
-<label for="{{ name }}">{{ label }}</label>
-<input type="{{ type || text }}" name="{{ name }}" id="{{ name }}" value="{{ value || '' }}" placeholder="{{ label }}"
-    checked="{{value || false}}" />
-@inputError(name)
-@each(message in $messages)
-<p class="text-danger">
-    {{ message }}
-</p>
-@end
-@end
+<div class="mb-3">
+    <label for="{{ name }}" class="form-label">{{ label }}</label>
+    <input type="{{ type || 'text' }}" class="form-control {{ flashMessages.has(`errors.${name}`) ? 'is-invalid' : '' }}" name="{{ name }}" id="{{ name }}" value="{{ value || '' }}" placeholder="{{ label }}" />
+    
+    @inputError(name)
+        @each(message in $messages)
+            <div class="invalid-feedback">
+                {{ message }}
+            </div>
+        @end
+    @end
+</div>
