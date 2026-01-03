@@ -1,4 +1,4 @@
-import vine from '@vinejs/vine'
+import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 
 export const deckValidator = vine.compile(
   vine.object({
@@ -7,3 +7,11 @@ export const deckValidator = vine.compile(
     isPublished: vine.boolean(),
   })
 )
+
+deckValidator.messagesProvider = new SimpleMessagesProvider({
+  required: 'Ce champ est requis',
+  string: 'Le format de ce champ est invalide',
+  minLength: 'Le titre doit contenir au moins {{ min }} caractères',
+  maxLength: 'Ce champ ne doit pas dépasser {{ max }} caractères',
+  boolean: 'La valeur doit être vraie ou fausse',
+})
