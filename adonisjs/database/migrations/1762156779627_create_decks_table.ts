@@ -12,7 +12,7 @@ export default class extends BaseSchema {
 
       //FK
       table
-        .integer('userId')
+        .integer('user_id')
         .unsigned()
         .notNullable()
         .references('id')

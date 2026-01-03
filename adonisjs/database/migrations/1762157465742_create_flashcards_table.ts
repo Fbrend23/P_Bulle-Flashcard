@@ -11,7 +11,7 @@ export default class extends BaseSchema {
 
       //fk
       table
-        .integer('deckId')
+        .integer('deck_id')
         .unsigned()
         .notNullable()
         .references('id')
