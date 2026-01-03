@@ -14,20 +14,16 @@ export default class Deck extends BaseModel {
   @column()
   declare description: string
 
-  @column({ columnName: 'is_published' })
+  @column()
   declare isPublished: boolean
 
-  @column({ columnName: 'userId' })
+  @column()
   declare userId: number
   //relations
-  @belongsTo(() => User, {
-    foreignKey: 'userId',
-  })
+  @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 
-  @hasMany(() => Flashcard, {
-    foreignKey: 'deckId',
-  })
+  @hasMany(() => Flashcard)
   declare flashcard: HasMany<typeof Flashcard>
 
   @column.dateTime({ autoCreate: true })

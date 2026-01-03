@@ -13,13 +13,11 @@ export default class Flashcard extends BaseModel {
   @column()
   declare answer: string
 
-  @column({ columnName: 'deckId' })
+  @column()
   declare deckId: number
 
   // relations
-  @belongsTo(() => Deck, {
-    foreignKey: 'deckId',
-  })
+  @belongsTo(() => Deck)
   declare deck: BelongsTo<typeof Deck>
 
   @column.dateTime({ autoCreate: true })
