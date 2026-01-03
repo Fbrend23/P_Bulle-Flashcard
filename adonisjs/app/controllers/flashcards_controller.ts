@@ -65,7 +65,7 @@ export default class CardsController {
     const user = auth.getUserOrFail()
 
     // On récupère la carte et on charge le deck pour vérifier l'appartenance
-    const card = await Flashcard.findOrFail(params.id)
+    const card = await Flashcard.findOrFail(params.cardId)
     await card.load('deck')
 
     if (card.deck.userId !== user.id) {
@@ -79,7 +79,7 @@ export default class CardsController {
    * Met à jour la carte
    */
   async update({ params, request, response, auth, session }: HttpContext) {
-    const card = await Flashcard.findOrFail(params.id)
+    const card = await Flashcard.findOrFail(params.cardId)
     await card.load('deck')
 
     // Vérification sécurité
@@ -104,7 +104,7 @@ export default class CardsController {
    * Supprime la carte
    */
   async destroy({ params, response, auth, session }: HttpContext) {
-    const card = await Flashcard.findOrFail(params.id)
+    const card = await Flashcard.findOrFail(params.cardId)
     await card.load('deck')
 
     if (card.deck.userId !== auth.user?.id) {
