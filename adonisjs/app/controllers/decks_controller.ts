@@ -48,7 +48,7 @@ export default class DecksController {
   async show({ params, view, auth }: HttpContext) {
     const deck = await Deck.findOrFail(params.deckId)
 
-    if (deck.userId === auth.user?.id || deck.isPublished) {
+    if (deck.userId === auth.user?.id || deck.isPublished || auth.user?.isAdmin) {
       return view.render('pages/decks/show', { deck, title: deck.title })
     }
     return view.render('pages/errors/not_found')
@@ -58,7 +58,11 @@ export default class DecksController {
    */
   async edit({ params, view, auth }: HttpContext) {
     const user = auth.getUserOrFail()
-    const deck = await user.related('deck').query().where('id', params.deckId).firstOrFail()
+    const deck = await Deck.findOrFail(params.deckId)
+
+    if (deck.userId !== user.id && !user.isAdmin) {
+      return view.render('pages/errors/not_found')
+    }
     return view.render('pages/decks/edit', { title: 'Modifier le deck', deck })
   }
 
@@ -67,7 +71,12 @@ export default class DecksController {
    */
   async update({ params, request, response, auth }: HttpContext) {
     const user = auth.getUserOrFail()
-    const deck = await user.related('deck').query().where('id', params.deckId).firstOrFail()
+    const deck = await Deck.findOrFail(params.deckId)
+
+    if (deck.userId !== user.id && !user.isAdmin) {
+      return response.unauthorized()
+    }
+
     const data = await request.validateUsing(deckValidator)
 
     await deck.merge(data).save()
@@ -79,7 +88,12 @@ export default class DecksController {
    */
   async destroy({ params, response, auth }: HttpContext) {
     const user = auth.getUserOrFail()
-    const deck = await user.related('deck').query().where('id', params.deckId).firstOrFail()
+    const deck = await Deck.findOrFail(params.deckId)
+
+    if (deck.userId !== user.id && !user.isAdmin) {
+      return response.unauthorized()
+    }
+
     await deck.delete()
     return response.redirect().toRoute('mydecks.index')
   }

@@ -11,10 +11,12 @@ export default class CardsController {
     const user = auth.getUserOrFail()
 
     // On vérifie que le deck appartient bien à l'utilisateur
-    const deck = await Deck.query()
-      .where('id', params.deckId)
-      .where('userId', user.id)
-      .firstOrFail()
+    // On vérifie que le deck appartient bien à l'utilisateur ou admin
+    const deck = await Deck.findOrFail(params.deckId)
+
+    if (deck.userId !== user.id && !user.isAdmin) {
+      return view.render('pages/errors/not_found')
+    }
 
     // On récupère les cartes du deck
     const cards = await Flashcard.query().where('deckId', deck.id).orderBy('id')
@@ -28,10 +30,11 @@ export default class CardsController {
   async create({ params, view, auth }: HttpContext) {
     const user = auth.getUserOrFail()
     // Vérification de propriété du deck
-    const deck = await Deck.query()
-      .where('id', params.deckId)
-      .where('userId', user.id)
-      .firstOrFail()
+    const deck = await Deck.findOrFail(params.deckId)
+
+    if (deck.userId !== user.id && !user.isAdmin) {
+      return view.render('pages/errors/not_found')
+    }
 
     return view.render('pages/cards/create', { deck, title: 'Ajouter une carte' })
   }
@@ -41,10 +44,11 @@ export default class CardsController {
    */
   async store({ request, response, params, auth, session }: HttpContext) {
     const user = auth.getUserOrFail()
-    const deck = await Deck.query()
-      .where('id', params.deckId)
-      .where('userId', user.id)
-      .firstOrFail()
+    const deck = await Deck.findOrFail(params.deckId)
+
+    if (deck.userId !== user.id && !user.isAdmin) {
+      return response.unauthorized()
+    }
 
     // Validation des données
     const { question, answer } = await request.validateUsing(cardValidator)
@@ -68,7 +72,7 @@ export default class CardsController {
     const card = await Flashcard.findOrFail(params.cardId)
     await card.load('deck')
 
-    if (card.deck.userId !== user.id) {
+    if (card.deck.userId !== user.id && !user.isAdmin) {
       return view.render('pages/errors/not_found')
     }
 
@@ -83,7 +87,7 @@ export default class CardsController {
     await card.load('deck')
 
     // Vérification sécurité
-    if (card.deck.userId !== auth.user?.id) {
+    if (card.deck.userId !== auth.user?.id && !auth.user?.isAdmin) {
       return response.unauthorized()
     }
 
@@ -107,7 +111,7 @@ export default class CardsController {
     const card = await Flashcard.findOrFail(params.cardId)
     await card.load('deck')
 
-    if (card.deck.userId !== auth.user?.id) {
+    if (card.deck.userId !== auth.user?.id && !auth.user?.isAdmin) {
       return response.unauthorized()
     }
 
