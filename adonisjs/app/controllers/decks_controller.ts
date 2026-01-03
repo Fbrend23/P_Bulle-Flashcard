@@ -21,8 +21,23 @@ export default class DecksController {
 
   async store({ request, response, auth }: HttpContext) {
     const data = await request.validateUsing(deckValidator)
+    // https://docs.adonisjs.com/guides/authentication/custom-auth-guard#implementing-the-getuserorfail-method
+    // "Returns an instance of the logged-in user or throws an exception"
     const user = auth.getUserOrFail()
 
+    // Relationship query builder
+
+    // You can also access the query builder for a relationship using the related method. The relationship queries are always scoped to a given parent model instance.
+
+    // Lucid will automatically add the where clause for limiting the posts to the given user in the following example.
+
+    // const user = await User.find(1)
+    // const posts = await user.related('posts').query()
+
+    // The query method returns a standard query builder instance, and you can chain any methods to it to add additional constraints.
+    // https://lucid.adonisjs.com/docs/relationships#relationship-query-builder
+
+    // Vu sur mes projets personnels
     const deck = await user.related('deck').create(data)
 
     return response.redirect().toRoute('deck.show', { id: deck.id })
