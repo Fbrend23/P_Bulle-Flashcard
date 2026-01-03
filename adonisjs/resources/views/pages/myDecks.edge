@@ -23,7 +23,7 @@
                             <td class="ps-4 fw-medium">{{deck.title}}</td>
                             <td>{{deck.description}}</td>
                             <td class="text-end pe-4">
-                                <a href="{{ route('deck.show', {id: deck.id})}}" class="btn btn-sm btn-outline-info me-1" title="Voir">
+                                <a href="{{ route('deck.show', {deckId: deck.id})}}" class="btn btn-sm btn-outline-info me-1" title="Voir">
                                     Voir
                                 </a>
                                 <a href="{{ route('deck.edit', {deckId: deck.id})}}" class="btn btn-sm btn-outline-warning me-1" title="Modifier">

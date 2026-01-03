@@ -30,7 +30,7 @@ export default class CardsController {
 
     await deck.related('flashcard').create(data)
 
-    return response.redirect().toRoute('deck.show', { id: deck.id })
+    return response.redirect().toRoute('deck.show', { deckId: deck.id })
   }
 
   /**
@@ -60,7 +60,7 @@ export default class CardsController {
     card.merge(data)
     await card.save()
 
-    return response.redirect().toRoute('deck.show', { id: card.deck })
+    return response.redirect().toRoute('deck.show', { deckId: card.deckId })
   }
 
   /**
@@ -73,6 +73,6 @@ export default class CardsController {
 
     await card.delete()
 
-    return response.redirect().toRoute('deck.show', { id: deckId })
+    return response.redirect().toRoute('deck.show', { deckId: deckId })
   }
 }
