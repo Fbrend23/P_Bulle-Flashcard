@@ -10,12 +10,23 @@ echo "" >> "$OUTPUT_FILE"
 # Tous les commits dans l'ordre chronologique (du plus ancien au plus récent)
 COMMITS=$(git rev-list --reverse HEAD)
 
+# Préparation de la progression
+TOTAL=$(echo "$COMMITS" | wc -l)
+COUNT=0
+
+echo "Génération du journal... ($TOTAL commits)"
+
 CURRENT_WEEK_KEY=""
 CURRENT_DAY=""
 
 for COMMIT in $COMMITS
 do
-  # Infos de base
+  # Mise à jour de la progression
+  COUNT=$((COUNT + 1))
+  PERCENT=$((COUNT * 100 / TOTAL))
+  echo -ne "Progression : $PERCENT% \r"
+
+  # Infos du commit
   AUTHOR=$(git --no-pager show -s --format='%an' "$COMMIT")
   DATE_ISO=$(git --no-pager show -s --format='%ad' --date=iso "$COMMIT")
   MESSAGE=$(git --no-pager show -s --format='%s' "$COMMIT")
@@ -34,10 +45,7 @@ do
     CURRENT_WEEK_KEY="$WEEK_KEY"
     CURRENT_DAY=""  # on reset le jour quand on change de semaine
 
-    # Jour de la semaine (1 = lundi, 7 = dimanche)
     WEEKDAY=$(date -d "$DATE_ONLY" +%u)
-
-    # Calcul du lundi (début de semaine) et du dimanche (fin de semaine)
     WEEK_START=$(date -d "$DATE_ONLY -$((WEEKDAY - 1)) days" +%Y-%m-%d)
     WEEK_END=$(date -d "$DATE_ONLY +$((7 - WEEKDAY)) days" +%Y-%m-%d)
 
@@ -67,7 +75,6 @@ do
   git --no-pager show --stat --pretty=format:'' "$COMMIT" \
     | grep '|' \
     | awk -F'|' '{
-        # Nettoyage espaces
         gsub(/^ +| +$/,"",$1);
         gsub(/^ +| +$/,"",$2);
         printf "| %s | %s |\n", $1, $2
@@ -80,3 +87,6 @@ do
   } >> "$OUTPUT_FILE"
 
 done
+
+echo ""
+echo "Génération terminée !"
