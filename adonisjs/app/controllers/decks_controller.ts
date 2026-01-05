@@ -4,7 +4,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class DecksController {
   /**
-   * Show every decks published
+   * Show user's decks
    */
   async index({ view, auth }: HttpContext) {
     const user = auth.getUserOrFail()
