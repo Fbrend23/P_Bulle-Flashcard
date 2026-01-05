@@ -5,7 +5,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class CardsController {
   /**
-   * Affiche la liste des cartes d'un deck spécifique
+   * Display a list of flashcards for a specific deck.
    */
   async index({ params, view, auth }: HttpContext) {
     const user = auth.getUserOrFail()
@@ -25,7 +25,7 @@ export default class CardsController {
   }
 
   /**
-   * Affiche le formulaire de création
+   * Display the form to create a new flashcard.
    */
   async create({ params, view, auth }: HttpContext) {
     const user = auth.getUserOrFail()
@@ -40,7 +40,7 @@ export default class CardsController {
   }
 
   /**
-   * Enregistre la nouvelle carte
+   * Handle the form submission to create a new flashcard.
    */
   async store({ request, response, params, auth, session }: HttpContext) {
     const user = auth.getUserOrFail()
@@ -63,7 +63,7 @@ export default class CardsController {
   }
 
   /**
-   * Affiche le formulaire d'édition
+   * Display the form to edit an existing flashcard.
    */
   async edit({ params, view, auth }: HttpContext) {
     const user = auth.getUserOrFail()
@@ -80,7 +80,7 @@ export default class CardsController {
   }
 
   /**
-   * Met à jour la carte
+   * Handle the form submission to update an existing flashcard.
    */
   async update({ params, request, response, auth, session }: HttpContext) {
     const card = await Flashcard.findOrFail(params.cardId)
@@ -105,7 +105,7 @@ export default class CardsController {
   }
 
   /**
-   * Supprime la carte
+   * Delete a flashcard by its ID.
    */
   async destroy({ params, response, auth, session }: HttpContext) {
     const card = await Flashcard.findOrFail(params.cardId)

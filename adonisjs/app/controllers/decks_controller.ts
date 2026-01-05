@@ -4,7 +4,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class DecksController {
   /**
-   * Show user's decks
+   * Display a list of all decks belonging to the authenticated user.
    */
   async index({ view, auth }: HttpContext) {
     const user = auth.getUserOrFail()
@@ -13,12 +13,15 @@ export default class DecksController {
     return view.render('pages/myDecks', { decks })
   }
   /**
-   * Handle form submission for the create action
+   * Display the form to create a new deck.
    */
   async create({ view }: HttpContext) {
     return view.render('pages/decks/create', { title: 'Créer un deck' })
   }
 
+  /**
+   * Handle the form submission to create a new deck.
+   */
   async store({ request, response, auth }: HttpContext) {
     const data = await request.validateUsing(deckValidator)
     // https://docs.adonisjs.com/guides/authentication/custom-auth-guard#implementing-the-getuserorfail-method
@@ -43,7 +46,7 @@ export default class DecksController {
     return response.redirect().toRoute('deck.show', { deckId: deck.id })
   }
   /**
-   * Show individual record
+   * Display a single deck by its ID.
    */
   async show({ params, view, auth }: HttpContext) {
     const deck = await Deck.findOrFail(params.deckId)
@@ -54,7 +57,7 @@ export default class DecksController {
     return view.render('pages/errors/not_found')
   }
   /**
-   * Edit individual record
+   * Display the form to edit an existing deck.
    */
   async edit({ params, view, auth }: HttpContext) {
     const user = auth.getUserOrFail()
@@ -67,7 +70,7 @@ export default class DecksController {
   }
 
   /**
-   * Handle form submission for the edit action
+   * Handle the form submission to update an existing deck.
    */
   async update({ params, request, response, auth }: HttpContext) {
     const user = auth.getUserOrFail()
@@ -84,7 +87,7 @@ export default class DecksController {
   }
 
   /**
-   * Delete record
+   * Delete a deck by its ID.
    */
   async destroy({ params, response, auth }: HttpContext) {
     const user = auth.getUserOrFail()
