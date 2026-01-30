@@ -35,7 +35,7 @@ router
 router
   .group(() => {
     router.get('/', [CardsController, 'index']).as('card.index')
-    router.get(':cardId/show', [CardsController, 'show']).as('card.show')
+    // router.get(':cardId/show', [CardsController, 'show']).as('card.show')
     router.get('/create', [CardsController, 'create']).as('card.create')
     router.post('/create', [CardsController, 'store']).as('card.store')
     router.get('/:cardId/edit', [CardsController, 'edit']).as('card.edit')
