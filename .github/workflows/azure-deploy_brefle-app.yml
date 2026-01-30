@@ -26,6 +26,7 @@ jobs:
         with:
           node-version: '22.x'
           cache: 'npm'
+          cache-dependency-path: adonisjs/package-lock.json
 
       - name: Install dependencies & Build
         run: |
@@ -64,4 +65,5 @@ jobs:
           package: .
 
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FA7E02E4756F439894E9C788AEAA0DE0 }}
+
 
