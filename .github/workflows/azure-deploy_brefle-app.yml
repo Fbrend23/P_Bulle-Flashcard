@@ -18,22 +18,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js version
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '22.x'
+          cache: 'npm'
 
-      - name: npm install, build, and test
+      - name: Install dependencies & Build
         run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+          npm ci
+          npm run build
 
-      - name: Upload artifact for deployment job
+      # Crucial Step: Install ONLY production dependencies inside the build folder
+      - name: Prepare Production Modules
+        run: |
+          cd build
+          npm ci --omit=dev
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          # We only upload the BUILT folder, not the whole repo
+          path: build/
 
   deploy:
     runs-on: ubuntu-latest
@@ -52,4 +59,5 @@ jobs:
           app-name: 'brefle-app'
           slot-name: 'Production'
           package: .
+
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FA7E02E4756F439894E9C788AEAA0DE0 }}
