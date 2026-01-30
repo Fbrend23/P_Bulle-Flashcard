@@ -14,6 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read #This is required for actions/checkout
+    defaults:
+      run:
+        working-directory: adonisjs
 
     steps:
       - uses: actions/checkout@v4
@@ -61,3 +64,4 @@ jobs:
           package: .
 
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FA7E02E4756F439894E9C788AEAA0DE0 }}
+
